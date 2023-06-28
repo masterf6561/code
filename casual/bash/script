@@ -1,0 +1,7 @@
+#!/bin/bash -x
+set -e
+item=$1
+
+if [ $item = '-database' ] then
+    mapfile -t DATA < $DATA_FILES
+fi

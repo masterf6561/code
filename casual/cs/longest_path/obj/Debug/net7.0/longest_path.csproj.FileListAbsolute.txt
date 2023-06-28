@@ -1,0 +1,15 @@
+/Users/moritz/Documents/code/casual/cs/longest_path/obj/Debug/net7.0/longest_path.csproj.AssemblyReference.cache
+/Users/moritz/Documents/code/casual/cs/longest_path/obj/Debug/net7.0/longest_path.GeneratedMSBuildEditorConfig.editorconfig
+/Users/moritz/Documents/code/casual/cs/longest_path/obj/Debug/net7.0/longest_path.AssemblyInfoInputs.cache
+/Users/moritz/Documents/code/casual/cs/longest_path/obj/Debug/net7.0/longest_path.AssemblyInfo.cs
+/Users/moritz/Documents/code/casual/cs/longest_path/obj/Debug/net7.0/longest_path.csproj.CoreCompileInputs.cache
+/Users/moritz/Documents/code/casual/cs/longest_path/bin/Debug/net7.0/longest_path
+/Users/moritz/Documents/code/casual/cs/longest_path/bin/Debug/net7.0/longest_path.deps.json
+/Users/moritz/Documents/code/casual/cs/longest_path/bin/Debug/net7.0/longest_path.runtimeconfig.json
+/Users/moritz/Documents/code/casual/cs/longest_path/bin/Debug/net7.0/longest_path.dll
+/Users/moritz/Documents/code/casual/cs/longest_path/bin/Debug/net7.0/longest_path.pdb
+/Users/moritz/Documents/code/casual/cs/longest_path/obj/Debug/net7.0/longest_path.dll
+/Users/moritz/Documents/code/casual/cs/longest_path/obj/Debug/net7.0/refint/longest_path.dll
+/Users/moritz/Documents/code/casual/cs/longest_path/obj/Debug/net7.0/longest_path.pdb
+/Users/moritz/Documents/code/casual/cs/longest_path/obj/Debug/net7.0/longest_path.genruntimeconfig.cache
+/Users/moritz/Documents/code/casual/cs/longest_path/obj/Debug/net7.0/ref/longest_path.dll
