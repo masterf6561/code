@@ -1,0 +1,38 @@
+from threading import *
+import tkinter as tk
+import os
+import time
+
+def background_task(name):
+    for letter in name:
+        print(letter.upper(), end="")
+    print("")
+    for i in range(3):
+        print(name)
+        time.sleep(1)
+
+
+if __name__ == "__main__":
+    names = [
+        "spotify",
+        "discord",
+        "chrome",
+        "steam",
+        "teamspeak",
+        "firefox",
+        "obs"
+    ]
+    threads = []
+    
+    for name in names:
+        thread = Thread(target=background_task, args=(name,))
+        threads.append(thread)
+    
+    for thread in threads:
+        thread.setDaemon(True)
+        thread.start()
+    for thread in threads:
+        thread.join()
+        
+    for i in range(3):
+        print("mainthread")
