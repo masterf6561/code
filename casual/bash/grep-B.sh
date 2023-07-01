@@ -1,0 +1,1 @@
+grep '\([0-9]\) *\1' #is used to find to consecuitive (also space seperated) equal digits
