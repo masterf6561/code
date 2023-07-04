@@ -8,6 +8,9 @@ import time
 def unused_Function():
     print("Im a feature")
     or am I?
+
+    var = "im so efficient"
+    #var isnt even right in python lmao
 """
 
 #writing some comments to document the code
