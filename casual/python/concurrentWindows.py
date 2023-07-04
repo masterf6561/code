@@ -3,6 +3,8 @@ import tkinter as tk
 import os
 import time
 
+
+#writing some comments to document the code
 def background_task(name):
     for letter in name:
         print(letter.upper(), end="")
@@ -11,7 +13,7 @@ def background_task(name):
         print(name)
         time.sleep(1)
 
-
+#main function
 if __name__ == "__main__":
     names = [
         "spotify",
