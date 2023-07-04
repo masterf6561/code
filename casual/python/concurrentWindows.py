@@ -4,6 +4,12 @@ import os
 import time
 
 
+"""
+def unused_Function():
+    print("Im a feature")
+    or am I?
+"""
+
 #writing some comments to document the code
 def background_task(name):
     for letter in name:
