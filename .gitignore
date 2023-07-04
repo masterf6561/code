@@ -1,5 +1,6 @@
 .DS_STORE
 __pychache__
 *.wav
-.assets.cache
-.editorconfig 
+*.assets.cache
+*.editorconfig 
+
