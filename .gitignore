@@ -3,4 +3,5 @@ __pychache__
 *.wav
 *.assets.cache
 *.editorconfig 
-
+notKey.txt
+plainKey.txt

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-API_KEY="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"
+API_KEY="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"
 
 QUESTION="\"$1\""
 
