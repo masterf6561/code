@@ -1,0 +1,26 @@
+#!/bin/bash
+
+API_KEY=$(cat /Users/moritz/Documents/zeug/key.txt)
+
+QUESTION="\"$1\""
+
+RESPONSE=$(curl -s https://api.openai.com/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $API_KEY" \
+  -d "{
+     \"model\": \"gpt-3.5-turbo\",
+     \"messages\": [{\"role\": \"user\", \"content\": $QUESTION}],
+     \"temperature\": 0.4
+   }" | grep content)
+
+IFS=':'
+
+read -ra SPLIT_RESPONSE <<< "$RESPONSE"
+
+content="        \"content\""
+
+for value in "${SPLIT_RESPONSE[@]}"; do
+  if [[ "$value" != "$content" ]]; then
+    echo "$value"
+  fi
+done
