@@ -1,3 +1,6 @@
+# trying to improve the bash version in /code/bash/ask by implementing features like:
+# recognizing \n as newline and code formatting 
+
 import openai
 import os
 
