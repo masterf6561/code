@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 
-from os import pipe
 import sys
 import time
 
 import gi
-gi.require_version("Gst", "1.8")
+gi.require_version("Gst", "1.0")
 from gi.repository import Gst # type: ignore
 
 def main(argv: list[str]):
