@@ -1,0 +1,40 @@
+.Navbar {
+  min-height: 60px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(16px + 2vmin);
+  color: black;
+  transition: opacity 0.3s;
+  /* position: sticky; */
+  /* top: 0; */
+}
+
+.Navbar.active{
+  background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 24%, rgba(10,165,196,1) 100%);
+}
+
+.Navbar-Link {
+  outline: none;
+  box-sizing: border-box;
+  margin: 0px;
+  padding: 0px;
+  font-size: inherit;
+}
+
+.Navbar-button{
+  color: rgb(0, 0, 0);
+  font-family: var(--font-die-grotesk-b);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.Navbar-button:hover{
+  border-bottom: 2px solid black;
+}
