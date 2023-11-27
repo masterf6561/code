@@ -7,7 +7,13 @@ const background_mapping = {
   Other: "#444444",
 }
 
-const TimelineItem = ({data}) => {
+interface Data{
+  text: string;
+  date: string;
+  tag: string;
+}
+
+const TimelineItem = ({data}: {data: Data}) => {
   return(
     <div className="timeline-item">
         <div className="timeline-item-content">

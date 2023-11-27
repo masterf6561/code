@@ -1,5 +1,5 @@
 export const timelineText = [
-  {text: "Moritz is Computer Science student studying in Berlin and living in Lübbenau. He is also very interested in Photography and Hiking.",
+  {text: "Moritz is a Computer Science student studying in Berlin and living in Lübbenau. He is also very interested in Photography and Hiking.",
   date: "Nowadays",
   tag: "Career",
   },

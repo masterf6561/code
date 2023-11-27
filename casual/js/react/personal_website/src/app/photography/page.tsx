@@ -1,5 +1,5 @@
 import {PhotographyContent} from "./Photography_content";
-
+import {Navbar} from "../components/Navbar";
 
 const Photography = () => {
 
@@ -7,7 +7,10 @@ const Photography = () => {
     "P1110838.jpeg", "P1120154.jpeg", "P1110775.jpeg", "P1110789.jpeg", "P1120142.jpeg", "P1120177.jpeg"] 
 
   return(
-    < PhotographyContent imageFilenames={imageFilenames}/>
+    <div>
+      <Navbar/>
+      <PhotographyContent imageFilenames={imageFilenames}/>
+    </div>
   )
 }
 

@@ -7,6 +7,10 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'Moritz Homepage',
   description: 'Powered by NextJS',
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/favicon.ico",
+  }
 }
 
 export default function RootLayout({

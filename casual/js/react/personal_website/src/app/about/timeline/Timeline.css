@@ -1,126 +1,42 @@
+
+/*
+  Based on TailwindCSS recommendations,
+  consider using classes instead of the `@apply` directive
+  @see https://tailwindcss.com/docs/reusing-styles#avoiding-premature-abstraction
+*/
 .timeline-container {
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    margin: 40px 0;
+  @apply flex flex-col relative mx-0 my-10 after:bg-[#999999] after:content-[''] after:absolute after:left-[calc(50%_-_2px)] after:w-1 after:h-full;
 }
-
-.timeline-container::after {
-    background-color: #999999;
-    content: '';
-    position: absolute;
-    left: calc(50% - 2px);
-    width: 4px;
-    height: 100%;
-}
-
 .timeline-item {
-    display: flex;
-    justify-content: flex-end;
-    padding-right: 30px;
-    position: relative;
-    margin: 10px 0;
-    width: 50%;
+  @apply flex justify-end relative w-6/12 mx-0 my-2.5 pr-[30px];
 }
-
 .timeline-item:nth-child(odd) {
-    align-self: flex-end;
-    justify-content: flex-start;
-    padding-left: 30px;
-    padding-right: 0;
+  @apply self-end justify-start pl-[30px] pr-0;
 }
-
 .timeline-item-content {
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-    border-radius: 5px;
-    background-color: #efefef;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    padding: 15px;
-    margin: 1.7rem;
-    position: relative;
-    width: 400px;
-    max-width: 70%;
-    text-align: right;
+  @apply text-black shadow-[0_0_5px_rgba(0,0,0,0.3)] bg-[#eeeeee] flex flex-col items-end relative w-[400px] max-w-[70%] text-right p-[15px] rounded-[5px] after:content-['_'] after:bg-white after:shadow-[1px_-1px_1px_rgba(0,0,0,0.2)] after:absolute after:right-[-7.5px] after:top-[calc(50%_-_7.5px)] after:rotate-45 after:w-[15px] after:h-[15px];
 }
-
-.timeline-item-content::after {
-    content: ' ';
-    background-color: #fff;
-    box-shadow: 1px -1px 1px rgba(0, 0, 0, 0.2);
-    position: absolute;
-    right: -7.5px;
-    top: calc(50% - 7.5px);
-    transform: rotate(45deg);
-    width: 15px;
-    height: 15px;
-}
-
 .timeline-item:nth-child(odd) .timeline-item-content {
-    text-align: left;
-    align-items: flex-start;
+  @apply text-left items-start after:left-[-7.5px] after:shadow-[-1px_1px_1px_rgba(0,0,0,0.2)] after:right-auto;
 }
-
-.timeline-item:nth-child(odd) .timeline-item-content::after {
-    right: auto;
-    left: -7.5px;
-    box-shadow: -1px 1px 1px rgba(0, 0, 0, 0.2);
-}
-
 .timeline-item-content .tag {
-    color: #fff;
-    font-size: 12px;
-    font-weight: bold;
-    top: 5px;
-    left: 5px;
-    letter-spacing: 1px;
-    padding: 5px;
-    position: absolute;
-    text-transform: uppercase;
+  @apply rounded-md text-white text-xs font-[bold] tracking-[1px] absolute uppercase p-[5px] left-[5px] top-[5px];
 }
-
 .timeline-item:nth-child(odd) .timeline-item-content .tag {
-    left: auto;
-    right: 5px;
+  @apply left-auto right-[5px];
 }
-
 .timeline-item-content time {
-    color: #777;
-    font-size: 12px;
-    font-weight: bold;
+  @apply text-[#777] text-xs font-[bold];
 }
-
 .timeline-item-content p {
-    font-size: 16px;
-    line-height: 24px;
-    margin: 15px 0;
-    max-width: 250px;
+  @apply text-base leading-6 max-w-[250px] mx-0 my-[15px];
 }
-
 .timeline-item-content a {
-    font-size: 14px;
-    font-weight: bold;
+  @apply text-sm font-[bold] after:content-['_►'] after:text-xs;
 }
-
-.timeline-item-content a::after {
-    content: ' ►';
-    font-size: 12px;
-}
-
 .timeline-item-content .circle {
-    background-color: #fff;
-    border: 3px solid #000000;
-    border-radius: 50%;
-    position: absolute;
-    top: calc(50% - 10px);
-    right: -40px;
-    width: 20px;
-    height: 20px;
-    z-index: 100;
+  @apply bg-white absolute top-[calc(50%_-_10px)] w-5 h-5 z-[100] rounded-[50%] border-[3px] border-solid border-black -right-10;
 }
-
 .timeline-item:nth-child(odd) .timeline-item-content .circle {
-    right: auto;
-    left: -40px;
+  @apply -left-10 right-auto;
 }

@@ -2,7 +2,7 @@ import {Timeline} from "./timeline/Timeline";
 
 export const AboutContent = () => {
   return(
-    <div>
+    <div className="bg-white h-[screen + 10vh]">
       <Timeline/>
     </div>
   )
