@@ -1,5 +1,7 @@
 import {PhotographyContent} from "./Photography_content";
 import {Navbar} from "../components/Navbar";
+import {Gear} from "./gear";
+import Link from "next/link";
 
 export interface Photography {
   imageFilenames: string[];
@@ -11,9 +13,13 @@ const Photography = () => {
     "P1110838.jpeg", "P1120154.jpeg", "P1110775.jpeg", "P1110789.jpeg", "P1120142.jpeg", "P1120177.jpeg"] 
 
   return(
-    <div className="bg-seasalt">
+    <div className="bg-seasalt ">
       <Navbar/>
+      <div className="bg-seasalt text-night text-center mt-4">
+        <Link href="#gearList">Interested in my Gear? Check it out below!</Link>
+      </div>
       <PhotographyContent imageFilenames={imageFilenames}/>
+      <Gear/>
     </div>
   )
 }
