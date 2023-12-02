@@ -2,7 +2,7 @@ import {Timeline} from "./timeline/Timeline";
 
 export const AboutContent = () => {
   return(
-    <div className="bg-white h-[screen + 10vh]">
+    <div className="bg-seasalt h-[screen + 10vh]">
       <Timeline/>
     </div>
   )

@@ -14,7 +14,7 @@
   @apply self-end justify-start pl-[30px] pr-0;
 }
 .timeline-item-content {
-  @apply text-black shadow-[0_0_5px_rgba(0,0,0,0.3)] bg-[#eeeeee] flex flex-col items-end relative w-[400px] max-w-[70%] text-right p-[15px] rounded-[5px] after:content-['_'] after:bg-white after:shadow-[1px_-1px_1px_rgba(0,0,0,0.2)] after:absolute after:right-[-7.5px] after:top-[calc(50%_-_7.5px)] after:rotate-45 after:w-[15px] after:h-[15px];
+  @apply text-black shadow-[0_0_5px_rgba(0,0,0,0.3)] bg-[#eeeeee] flex flex-col items-end relative w-[400px] max-w-[70%] text-right p-[15px] rounded-[5px] after:content-['_'] after:bg-seasalt after:shadow-[1px_-1px_1px_rgba(0,0,0,0.2)] after:absolute after:right-[-7.5px] after:top-[calc(50%_-_7.5px)] after:rotate-45 after:w-[15px] after:h-[15px];
 }
 .timeline-item:nth-child(odd) .timeline-item-content {
   @apply text-left items-start after:left-[-7.5px] after:shadow-[-1px_1px_1px_rgba(0,0,0,0.2)] after:right-auto;

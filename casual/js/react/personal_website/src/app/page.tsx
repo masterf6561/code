@@ -6,7 +6,7 @@ import {Content} from "./components/Content";
 const App = () => {
   
   return (
-    <div className="bg-white h-screen">
+    <div className="bg-seasalt h-screen">
       <Navbar/>
       <Content/>
     </div>
