@@ -39,4 +39,10 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 Below you can find some screenshots of the current version (unfinished):
 
-![some text](https://github.com/masterf6561/code/blob/main/casual/js/react/personal_website/public/Screenshot%202023-12-08%20at%2018.09.06.png)
+![Home](https://github.com/masterf6561/code/blob/main/casual/js/react/personal_website/public/Screenshot%202023-12-08%20at%2018.09.06.png)
+
+![Home](https://github.com/masterf6561/code/blob/main/casual/js/react/personal_website/public/Screenshot%202023-12-08%20at%2018.09.32.png)
+
+![Home](https://github.com/masterf6561/code/blob/main/casual/js/react/personal_website/public/Screenshot%202023-12-08%20at%2018.09.45.png)
+
+![Home](https://github.com/masterf6561/code/blob/main/casual/js/react/personal_website/public/Screenshot%202023-12-08%20at%2018.10.04.png)
