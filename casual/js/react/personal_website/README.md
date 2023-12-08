@@ -37,4 +37,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ---
 
-Below you can find some screenshots of the current version:
+Below you can find some screenshots of the current version (unfinished):
