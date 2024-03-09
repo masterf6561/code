@@ -15,10 +15,16 @@ const config: Config = {
       },
     },
     colors: {
+      "white": "#ffffff",
       "bringBackground": '#2b3135',
+      "bringSecondaryBackground": "#728790",
       "bringHighlight": '#f16a68',
+      "bringHighlightHover": "#c95957",
+      "bringSecondary": "#338a7e",
+      "bringSecondaryHover": "#2d756b"
     }
   },
   plugins: [],
+  darkMode: "class",
 };
 export default config;

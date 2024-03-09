@@ -35,7 +35,7 @@ export default async function ItemsPage({ params }: any){
 
   return(
   <>
-  
+  <div className="grid-row place-items-around mt-5"> 
     <h1 className={`mb-3 text-2xl font-semibold`}>
      Purchase: 
     </h1>
@@ -69,6 +69,7 @@ export default async function ItemsPage({ params }: any){
         )
       })
     }
+    </div>
     <AddItem props={{
       uuid: params.uuid
       }}/>

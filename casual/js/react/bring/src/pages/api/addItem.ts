@@ -1,4 +1,4 @@
-import {addItem} from "../../lib/clientActions.ts";
+import {addItem} from "../../lib/clientActions";
 import type { NextApiRequest, NextApiResponse } from 'next'
  
 type Item = {

@@ -1,4 +1,4 @@
-import {removeItem} from "../../lib/clientActions.ts";
+import {removeItem} from "../../lib/clientActions";
 import type { NextApiRequest, NextApiResponse } from 'next'
  
 type Item = {

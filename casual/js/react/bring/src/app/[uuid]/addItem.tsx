@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { userAddItem} from "../../../lib/userAddItem";
+import { userAddItem} from "../../lib/userAddItem";
 
 export default function AddItem({ props }: any) {
 
