@@ -8,23 +8,23 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
-      },
     },
     colors: {
       "white": "#ffffff",
+      "black": "#000000",
+      "mediumaquamarine": "#73b9ad",
+      "lightskyblue": "#91cef8",
       "bringBackground": '#2b3135',
+      "bringBackgroundHover": "#222629",
       "bringSecondaryBackground": "#728790",
       "bringHighlight": '#f16a68',
       "bringHighlightHover": "#c95957",
       "bringSecondary": "#338a7e",
-      "bringSecondaryHover": "#2d756b"
+      "bringSecondaryHover": "#2d756b",
+      "navbar": "#aaa"
     }
   },
   plugins: [],
-  darkMode: "class",
+  darkMode: false,
 };
 export default config;

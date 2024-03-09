@@ -9,6 +9,11 @@ export const ThemeSwitcher = () => {
   const [mounted, setMounted] = useState<boolean>(false);
 
   useEffect(() => setMounted(true), []);
+
+  if(!mounted){
+    return null;
+  }
+
   if(resolvedTheme === "dark"){
     return <FiSun onClick={() => setTheme("light")}/>
   }

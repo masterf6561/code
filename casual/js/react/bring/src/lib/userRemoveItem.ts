@@ -8,6 +8,5 @@ export const userRemoveItem = async(listUUID: string, itemName: string) => {
 
   // Handle the response as needed
   const data = await response.json();
-  console.log('Response:', data);
   return data;
 }

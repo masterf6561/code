@@ -40,12 +40,12 @@ const getLists = async() => {
 export default async function Page() {
   const lists = await getLists(); 
   return(
-    <div className="md:container md:mx-auto min-h-screen min-w-screen rounded-md">
+    <div className="flex flex-col items-center justify-center h-screen p-4">
       {
         lists.map((list: ResponseList) => {
           return(
-            <div className="text-white">
-              <Link href={`/${list["listUuid"]}`} className={`m-3 px-3 text-3xl font-semibold text-white`} style={{"textColor": "white"}}>
+            <div className="m-6 p-7 w-full max-w-sm mx-auto text-white bg-gradient-to-r from-mediumaquamarine to-lightskyblue rounded-xl shadow-lg flex items-center space-x-4">
+              <Link href={`/${list["listUuid"]}`} className={`m-3 px-3 text-3xl font-semibold `}>
                 {list.name}
               </Link>
             </div>
@@ -55,3 +55,5 @@ export default async function Page() {
     </div>
   )
 }
+
+

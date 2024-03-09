@@ -35,8 +35,9 @@ export default async function ItemsPage({ params }: any){
 
   return(
   <>
-  <div className="grid-row place-items-around mt-5"> 
-    <h1 className={`mb-3 text-2xl font-semibold`}>
+  <div className="flex items-center justify-center">
+    <div className="mx-1 md:mx-4"> 
+    <h1 className={`px-4 my-4 text-2xl font-semibold`}>
      Purchase: 
     </h1>
     {
@@ -52,7 +53,7 @@ export default async function ItemsPage({ params }: any){
         )
       })
     }
-    <h1 className={`mb-3 text-2xl font-semibold`} >
+    <h1 className={`px-4 my-4 text-2xl font-semibold`} >
      Recently: 
     </h1>
     {
@@ -64,15 +65,16 @@ export default async function ItemsPage({ params }: any){
                 uuid: params.uuid,
                 Item: item,
               }}
-
               />
         )
       })
     }
-    </div>
     <AddItem props={{
       uuid: params.uuid
       }}/>
-  </>
+
+    </div>
+    </div>
+   </>
  )
 }

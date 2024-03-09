@@ -32,7 +32,7 @@ export function PurchaseItem({props}:any) {
     
       <button
         onClick={() => onClick()}
-        className="bg-bringHighlight w-24 h-24 align-middle m-2 text-white hover:bg-bringHighlightHover font-semibold py-2 px-4 rounded-md transition duration-300 ease-in-out"
+        className="bg-bringHighlight w-28 h-28 sm-w-24 sm-h-24 align-middle m-2 text-white hover:bg-bringHighlightHover font-semibold py-2 px-4 rounded-md transition duration-300 ease-in-out"
         >
           <h2 className={`font-semibold`}>
             {Item.name}
@@ -61,7 +61,7 @@ export function RecentItem({props}:any) {
     
       <button
         onClick={() => onClick()}
-        className="bg-bringSecondary align-middle m-2 w-24 h-24 text-white hover:bg-bringSecondaryHover rounded-md shadow-md transition duration-300 ease-in-out"
+        className="bg-bringSecondary whitespace-break-spaces align-middle m-2 md:w-28 md:h-28 w-28 h-28 text-white hover:bg-bringSecondaryHover rounded-md shadow-md transition duration-300 ease-in-out"
         >
           <h2 className={`font-semibold`}>
             {Item.name}
