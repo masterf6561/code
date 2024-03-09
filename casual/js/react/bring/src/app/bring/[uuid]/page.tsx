@@ -1,22 +1,33 @@
 const bringApi = require("bring-shopping");
-import { Item } from "./item";
+import {PurchaseItem, RecentItem} from "./item";
 import {ListItem} from "../page";
+import AddItem from "./addItem";
 
-const getItems = async(uuid: string) => {
-  const bring = new bringApi({mail: "moritz.lechner02@gmail.com", password: "gehomert27"});
-  try{
-    await bring.login();
-  }
-  catch(error){
-    console.log(error.message);
-  }
 
-  const listItems = await bring.getItems(uuid);
-  console.log(listItems);
-  return listItems;
-}
+export const dynamic = "auto",
+  dynamicParams = true,
+  revalidate = 2,
+  fetchCache = "only-no-store",
+  runtime = "nodejs",
+  preferredRegion = "auto"
+
 
 export default async function ItemsPage({ params }: any){
+
+  const bring = new bringApi({mail: "moritz.lechner02@gmail.com", password: "gehomert27"});
+    try{
+      await bring.login();
+    }
+    catch(error){
+      console.log(error.message);
+  }
+
+  const getItems = async(uuid: string) => {
+    
+    const listItems = await bring.getItems(uuid);
+    return listItems;
+  }
+
 
   const lists = await getItems(params.uuid);
   const purchase = lists["purchase"];
@@ -31,7 +42,13 @@ export default async function ItemsPage({ params }: any){
     {
       purchase.map((item: ListItem) => {
         return(
-            <Item key={item.name} Item={item}/>
+            <PurchaseItem
+              key={item.name} 
+              props={{
+                uuid: params.uuid,
+                Item: item,
+              }}
+              />
         )
       })
     }
@@ -41,11 +58,20 @@ export default async function ItemsPage({ params }: any){
     {
       recently.map((item: ListItem) => {
         return(
-            <Item key={item.name} Item={item}/>
+            <RecentItem 
+              key={item.name} 
+              props={{
+                uuid: params.uuid,
+                Item: item,
+              }}
+
+              />
         )
       })
     }
-
+    <AddItem props={{
+      uuid: params.uuid
+      }}/>
   </>
  )
 }

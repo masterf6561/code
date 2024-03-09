@@ -20,12 +20,6 @@ export interface ListItem{
   name: string,
 }
 
-export const dynamic = "auto",
-  dynamicParams = true,
-  revalidate = 0,
-  runtime = "nodejs",
-  preferredRegion = "auto"
-
 const getLists = async() => {
   const bring = new bringApi({mail: "moritz.lechner02@gmail.com", password: "gehomert27"});
   try{
@@ -46,19 +40,12 @@ const getLists = async() => {
 export default async function Page() {
   const lists = await getLists(); 
   return(
-    <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-      <a
-        href="/"
-        className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-        rel="noopener noreferrer"
-      >
-      Home
-      </a>
+    <div className="md:container md:mx-auto bg-bringBackground min-h-screen min-w-screen rounded-md">
       {
         lists.map((list: ResponseList) => {
           return(
-            <div className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30">
-              <Link href={`/bring/${list["listUuid"]}`} className={`mb-3 text-2xl font-semibold`}>
+            <div className="text-white">
+              <Link href={`/bring/${list["listUuid"]}`} className={`m-3 px-3 text-3xl font-semibold text-white`} style={{"textColor": "white"}}>
                 {list.name}
               </Link>
             </div>
