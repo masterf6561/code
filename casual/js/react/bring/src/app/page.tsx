@@ -26,7 +26,7 @@ const getLists = async() => {
     await bring.login();
   }
   catch(error){
-    console.log(error.message);
+    console.log("Error while logging into BringApi");
   }
 
   const response = await bring.loadLists();

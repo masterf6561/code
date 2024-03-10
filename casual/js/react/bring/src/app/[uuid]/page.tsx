@@ -19,7 +19,7 @@ export default async function ItemsPage({ params }: any){
       await bring.login();
     }
     catch(error){
-      console.log(error.message);
+      console.log("Error while logging to BringAPi");
   }
 
   const getItems = async(uuid: string) => {

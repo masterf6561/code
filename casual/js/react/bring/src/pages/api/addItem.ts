@@ -21,7 +21,7 @@ type ResponseData = {
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ResponseData>) {
 if (req.method === 'POST') {
     const {itemId, itemDesc, listUUID} = req.query;
-    const newList: ItemList = await addItem(listUUID, itemId, itemDesc);
+    const newList: ItemList = await addItem(listUUID as string, itemId as string, itemDesc as string);
     res.status(200).json({ status: "success", list: newList });
   } else {
     res.status(405).json({ status: "Method Not Allowed", list: undefined });

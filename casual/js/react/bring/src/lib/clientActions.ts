@@ -6,7 +6,7 @@ export const removeItem = async(listUUID: string, itemName: string) => {
     await bring.login();
   }
   catch(error){
-    console.log(error.message);
+    console.log("Error while logging into BringApi");
   }
 
   bring.moveToRecentList(listUUID, itemName);
@@ -20,7 +20,7 @@ export const addItem = async(listUUID: string, itemName: string, itemDesc: strin
     await bring.login();
   }
   catch(error){
-    console.log(error.message);
+    console.log("Error while logging into BringAPi");
   }
   bring.saveItem(listUUID, itemName, itemDesc)
   const newList = await bring.getItems(listUUID);

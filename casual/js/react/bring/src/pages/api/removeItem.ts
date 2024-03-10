@@ -21,7 +21,7 @@ type ResponseData = {
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ResponseData>) {
 if (req.method === 'DELETE') {
     const {itemId, listUUID} = req.query;
-    const newList: ItemList = await removeItem(listUUID, itemId);
+    const newList: ItemList = await removeItem(listUUID as string, itemId as string);
     res.status(200).json({ status: "success", list: newList });
   } else {
     res.status(405).json({ status: "Method Not Allowed", list: undefined });

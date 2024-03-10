@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { userAddItem} from "../../lib/userAddItem";
 
@@ -11,7 +11,7 @@ export default function AddItem({ props }: any) {
 
   const router = useRouter();
 
-  const addNewItem = async(event, listUUID: string) => {
+  const addNewItem = async(event: FormEvent, listUUID: string) => {
     event.preventDefault();
     const response = await userAddItem(listUUID, itemName, itemDesc);
     const newList = response.list;
