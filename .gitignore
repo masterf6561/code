@@ -5,3 +5,5 @@ __pychache__
 *.editorconfig 
 notKey.txt
 plainKey.txt
+*.o
+*.bin
