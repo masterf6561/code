@@ -1,0 +1,15 @@
+.alive {
+    background-color: black;
+}
+
+.dead {
+    background-color: white;
+}
+
+table {
+    border: 2px solid black;
+}
+
+td {
+    border: 1px solid #ffffff;
+}
