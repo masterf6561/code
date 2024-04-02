@@ -2,22 +2,24 @@
 use std::io;
 
 fn main() {
-    let mut number_of_shelfs_string = String::new();
+    let mut number_of_shelves_string = String::new();
     io::stdin()
-        .read_line(&mut number_of_shelfs_string)
-        .expect("Error while readin shelfs");
+        .read_line(&mut number_of_shelves_string)
+        .expect("Error while readin shelves");
 
-    let number_of_shelfs: i32 = number_of_shelfs_string
+    let number_of_shelves: i32 = number_of_shelves_string
         .trim()
         .parse()
         .expect("Not a number");
+
+    let mut library: Vec<Vec<i32>> = vec![vec![]; number_of_shelves.try_into().unwrap()];
 
     let mut number_of_queries_string = String::new();
     io::stdin()
         .read_line(&mut number_of_queries_string)
         .expect("Error while reading queries");
 
-    let mut number_of_queries: i32 = number_of_shelfs_string
+    let mut number_of_queries: i32 = number_of_shelves_string
         .trim()
         .parse()
         .expect("Not a number");
@@ -28,12 +30,6 @@ fn main() {
         io::stdin()
             .read_line(&mut current_query_string)
             .expect("Unable to read string");
-        let mut number_of_shelfs_string = String::new();
-        io::stdin()
-            .read_line(&mut number_of_shelfs_string)
-            .expect("Error while readin shelfs");
-
-        let number_of_shelfs: i32 = number_of_shelfs_string.parse().expect("Not a number");
 
         let current_query: Vec<i32> = current_query_string
             .split_whitespace()
@@ -43,21 +39,17 @@ fn main() {
         let current_query_type: i32 = current_query[0];
 
         if current_query_type == 1 {
+            let shelve: usize = current_query[1] as usize;
+            let book_pages: i32 = current_query[2];
+
+            library[shelve].push(book_pages);
         } else if current_query_type == 2 {
-            let mut input_string = String::new();
-
-            io::stdin()
-                .read_line(&mut input_string)
-                .expect("Error while reading for type 2");
-
-            let current_query: Vec<i32> = input_string
-                .split_whitespace()
-                .map(|s| s.parse().expect("Error while reading Number"))
-                .collect();
+            let shelve: usize = current_query[1].try_into().unwrap();
+            let book: usize = current_query[2].try_into().unwrap();
+            println!("{}", library[shelve][book]);
         } else {
-            let mut shelf_string = String::new();
+            let shelve: usize = current_query[1].try_into().unwrap();
+            println!("{}", library[shelve].len());
         }
-
-        println!("{:?}", current_query);
     }
 }
