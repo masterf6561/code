@@ -104,7 +104,7 @@ fn main() {
     let api_key: String = file_content.trim().to_string();
     let args = Args::parse();
     let city = &args.city;
-    let time = &args.time;
+    let _time = &args.time;
     let city_location: Loc = get_city_loc(city.to_string(), &api_key)
         .expect("Error while converting Location to Lon/Lat");
     let city_weather: Weather =
