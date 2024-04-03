@@ -58,7 +58,7 @@ struct Weather {
 
 #[tokio::main]
 async fn get_city_weather(
-    location: Loc,
+    location: &Loc,
     api_key: &String,
 ) -> Result<Weather, Box<dyn std::error::Error>> {
     let response = reqwest::get(format!(
@@ -69,8 +69,14 @@ async fn get_city_weather(
     let body = response.text().await?;
     let body: Value = serde_json::from_str(&body)?;
     // Access the "lat" and "lon" fields
-    let main = body["weather"][0]["main"].to_string();
-    let description = body["weather"][0]["description"].to_string();
+    let main = body["weather"][0]["main"]
+        .to_string()
+        .trim_matches('"')
+        .to_string();
+    let description = body["weather"][0]["description"]
+        .to_string()
+        .trim_matches('"')
+        .to_string();
     let temp = body["main"]["temp"]
         .as_f64()
         .ok_or("Error while forming Temp to f64")?;
@@ -85,22 +91,28 @@ async fn get_city_weather(
     })
 }
 
-fn format_output(weather: Weather) {
-    println!("{:?}", weather);
+fn format_output(city: String, weather: Weather) {
+    println!("The Weather in {}: {}", city, weather.main);
+    println!("with mostly {}.", weather.description);
+    println!("The current temperature is {} °C", weather.temp);
+    println!("and wind speeds are around {} m/s.", weather.wind_speed);
+    println!("This equals {:.2} km/h.", weather.wind_speed * 3.6);
 }
 
 fn main() {
     let file_content = read_to_string(".key").unwrap();
     let api_key: String = file_content.trim().to_string();
-    println!("{:?}", api_key);
     let args = Args::parse();
     let city = &args.city;
     let time = &args.time;
     let city_location: Loc = get_city_loc(city.to_string(), &api_key)
         .expect("Error while converting Location to Lon/Lat");
     let city_weather: Weather =
-        get_city_weather(city_location, &api_key).expect("Error while getting City weather");
-    format_output(city_weather);
+        get_city_weather(&city_location, &api_key).expect("Error while getting City weather");
+    format_output(
+        city_location.name.trim_matches('"').to_string(),
+        city_weather,
+    );
 }
 
 // for further information and documentation checkout: https://openweathermap.org/current#data
