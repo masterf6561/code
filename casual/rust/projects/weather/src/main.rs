@@ -1,7 +1,6 @@
-use clap::{error, Parser};
+use clap::Parser;
 use serde_json::Value;
-
-const API_KEY: &str = "edd88372a14f134203a58212e743f06a";
+use std::fs::read_to_string;
 
 #[derive(Parser)]
 struct Args {
@@ -26,10 +25,13 @@ struct Loc {
 }
 
 #[tokio::main]
-async fn get_city_loc(city_name: String) -> Result<Loc, Box<dyn std::error::Error>> {
+async fn get_city_loc(
+    city_name: String,
+    api_key: &String,
+) -> Result<Loc, Box<dyn std::error::Error>> {
     let response = reqwest::get(format!(
         "http://api.openweathermap.org/geo/1.0/direct?q={}&limit=1&appid={}",
-        city_name, API_KEY
+        city_name, api_key
     ))
     .await?;
     let body = response.text().await?;
@@ -55,10 +57,13 @@ struct Weather {
 }
 
 #[tokio::main]
-async fn get_city_weather(location: Loc) -> Result<Weather, Box<dyn std::error::Error>> {
+async fn get_city_weather(
+    location: Loc,
+    api_key: &String,
+) -> Result<Weather, Box<dyn std::error::Error>> {
     let response = reqwest::get(format!(
         "https://api.openweathermap.org/data/2.5/weather?lat={}&lon={}&units=metric&appid={}",
-        location.lat, location.lon, API_KEY
+        location.lat, location.lon, api_key
     ))
     .await?;
     let body = response.text().await?;
@@ -85,19 +90,16 @@ fn format_output(weather: Weather) {
 }
 
 fn main() {
-    // geolocator to transform city to lat/lon
-    // http://api.openweathermap.org/geo/1.0/direct?q={city name}&limit=5&appid=API_KEY
-    //
-
-    // weather api request
-    // https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&exclude={part}&appid={API key}
+    let file_content = read_to_string(".key").unwrap();
+    let api_key: String = file_content.trim().to_string();
+    println!("{:?}", api_key);
     let args = Args::parse();
     let city = &args.city;
     let time = &args.time;
-    let city_location: Loc =
-        get_city_loc(city.to_string()).expect("Error while converting Location to Lon/Lat");
+    let city_location: Loc = get_city_loc(city.to_string(), &api_key)
+        .expect("Error while converting Location to Lon/Lat");
     let city_weather: Weather =
-        get_city_weather(city_location).expect("Error while getting City weather");
+        get_city_weather(city_location, &api_key).expect("Error while getting City weather");
     format_output(city_weather);
 }
 
