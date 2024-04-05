@@ -1,118 +1,128 @@
 use clap::Parser;
-use serde_json::Value;
+use colored::*;
+use serde::Deserialize;
 use std::fs::read_to_string;
 
 #[derive(Parser)]
 struct Args {
     city: String,
-    #[clap(default_value_t, value_enum)]
-    time: Time,
 }
 
-#[derive(clap::ValueEnum, Clone, Default, Debug)]
-enum Time {
-    Now,
-    #[default]
-    Today,
-    Tomorrow,
-}
-
-#[derive(Debug)]
-struct Loc {
-    lon: f64,
-    lat: f64,
+#[derive(Debug, Deserialize)]
+struct WeatherResponse {
+    weather: Vec<Weather>,
+    main: Main,
+    wind: Wind,
     name: String,
 }
 
-#[tokio::main]
-async fn get_city_loc(
-    city_name: String,
-    api_key: &String,
-) -> Result<Loc, Box<dyn std::error::Error>> {
-    let response = reqwest::get(format!(
-        "http://api.openweathermap.org/geo/1.0/direct?q={}&limit=1&appid={}",
-        city_name, api_key
-    ))
-    .await?;
-    let body = response.text().await?;
-    let body: Value = serde_json::from_str(&body)?;
-    // Access the "lat" and "lon" fields
-    let lon = body[0]["lon"]
-        .as_f64()
-        .ok_or("Error while forming Lon to f64")?;
-    let lat = body[0]["lat"]
-        .as_f64()
-        .ok_or("Error while formating Lat as f64")?;
-    let name = body[0]["name"].to_string();
-
-    Ok(Loc { lon, lat, name })
-}
-
-#[derive(Debug)]
+#[derive(Debug, Deserialize)]
 struct Weather {
     main: String,
     description: String,
-    temp: f64,
-    wind_speed: f64,
+    icon: String,
 }
 
-#[tokio::main]
-async fn get_city_weather(
-    location: &Loc,
+#[derive(Debug, Deserialize)]
+struct Main {
+    temp: f64,
+    humidity: f64,
+}
+
+#[derive(Debug, Deserialize)]
+struct Wind {
+    speed: f64,
+}
+
+fn get_city_weather(
+    location: &String,
     api_key: &String,
-) -> Result<Weather, Box<dyn std::error::Error>> {
-    let response = reqwest::get(format!(
-        "https://api.openweathermap.org/data/2.5/weather?lat={}&lon={}&units=metric&appid={}",
-        location.lat, location.lon, api_key
-    ))
-    .await?;
-    let body = response.text().await?;
-    let body: Value = serde_json::from_str(&body)?;
-    // Access the "lat" and "lon" fields
-    let main = body["weather"][0]["main"]
-        .to_string()
-        .trim_matches('"')
-        .to_string();
-    let description = body["weather"][0]["description"]
-        .to_string()
-        .trim_matches('"')
-        .to_string();
-    let temp = body["main"]["temp"]
-        .as_f64()
-        .ok_or("Error while forming Temp to f64")?;
-    let wind_speed = body["wind"]["speed"]
-        .as_f64()
-        .ok_or("Error while formating WindSpeed as f64")?;
-    Ok(Weather {
-        main,
+) -> Result<WeatherResponse, reqwest::Error> {
+    let url = format!(
+        "https://api.openweathermap.org/data/2.5/weather?q={}&units=metric&appid={}",
+        location, api_key
+    );
+    let response = reqwest::blocking::get(&url)?;
+    let body = response.json::<WeatherResponse>()?;
+    Ok(body)
+}
+
+fn get_weather_icon(icon_id: &str) -> &'static str {
+    match icon_id {
+        "01d" => "☀️",
+        "01n" => "🌕",
+        "02d" => "🌤️",
+        "02n" => "🌓",
+        "03d" => "☁️",
+        "03n" => "☁️",
+        "04d" => "🌥️",
+        "04n" => "🌥️",
+        "09d" => "🌦️",
+        "09n" => "🌧️",
+        "10d" => "🌦️",
+        "10n" => "🌧️",
+        "11d" => "⛈️",
+        "11n" => "⛈️",
+        "13d" => "❄️",
+        "13n" => "❄️",
+        "50d" => "🌫️",
+        "50n" => "🌫️",
+        _ => "❓",
+    }
+}
+
+fn format_output(response: WeatherResponse) {
+    let description = &response.weather[0].description;
+    let weather = &response.weather[0].main;
+    let temp = response.main.temp;
+    let humidity = response.main.humidity;
+    let wind_speed = response.wind.speed;
+    let icon = &response.weather[0].icon;
+    let name = response.name;
+    let output_text = format!(
+        "The Weather in {}: {} {} 
+> mostly {}.
+> Temperature is {} °C 
+> Humidity is at {} %.
+> windspeeds around {} m/s which equals {:.2} km/h.
+",
+        name,
+        weather,
+        get_weather_icon(&icon),
         description,
         temp,
+        humidity,
         wind_speed,
-    })
-}
-
-fn format_output(city: String, weather: Weather) {
-    println!("The Weather in {}: {}", city, weather.main);
-    println!("with mostly {}.", weather.description);
-    println!("The current temperature is {} °C", weather.temp);
-    println!("and wind speeds are around {} m/s.", weather.wind_speed);
-    println!("This equals {:.2} km/h.", weather.wind_speed * 3.6);
+        wind_speed * 3.6
+    );
+    if description == "few clouds" {
+        println!("{}", "test".green());
+    }
+    let output_colored = match response.weather[0].description.as_str() {
+        "clear sky" => output_text.yellow(),
+        "few clouds" | "scattered clouds" | "broken clouds" => output_text.cyan(),
+        "overcast clouds" | "mist" | "haze" | "smoke" | "sand" | "dust" | "fog" | "squalls" => {
+            output_text.dimmed()
+        }
+        "shower rain" | "light rain" | "rain" | "thunderstorm" | "snow" => output_text.blue(),
+        _ => output_text.normal(),
+    };
+    println!("{}", output_colored);
 }
 
 fn main() {
-    let file_content = read_to_string(".key").unwrap();
+    let file_content = read_to_string("/usr/local/etc/.key").unwrap();
     let api_key: String = file_content.trim().to_string();
     let args = Args::parse();
     let city = &args.city;
-    let _time = &args.time;
-    let city_location: Loc = get_city_loc(city.to_string(), &api_key)
-        .expect("Error while converting Location to Lon/Lat");
-    let city_weather: Weather =
-        get_city_weather(&city_location, &api_key).expect("Error while getting City weather");
-    format_output(
-        city_location.name.trim_matches('"').to_string(),
-        city_weather,
-    );
+    match get_city_weather(&city, &api_key) {
+        Ok(response) => {
+            format_output(response);
+        }
+        Err(err) => {
+            println!("Error {}", err);
+        }
+    }
 }
 
 // for further information and documentation checkout: https://openweathermap.org/current#data
