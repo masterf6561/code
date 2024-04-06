@@ -36,7 +36,7 @@ fn main() {
             .collect();
         if current_tube.len() != 4 {
             panic!(
-                "\n The tube only has 4 slots. You gave {} \n",
+                "\n The tube only has 4 slots. You gave {}. \n",
                 current_tube.len()
             );
         }
