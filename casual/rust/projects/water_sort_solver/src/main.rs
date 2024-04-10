@@ -1,15 +1,30 @@
 use std::io;
 
-fn solve_puzzle(tubes: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
-    for tube in &tubes {
-        println!("{:?}", tube);
+fn calc_highest_color(tubes: &Vec<Vec<i32>>) -> Vec<f32> {
+    let color_count = tubes.len();
+    let mut color_placements: Vec<f32> = vec![0.0; color_count];
+    for (tube_index, tube) in tubes.iter().enumerate() {
+        for (color_index, _color) in tube.iter().enumerate() {
+            color_placements[tube_index] = (color_index + 1) as f32;
+        }
     }
+    println!("{:?}", color_placements);
+    for index in 0..color_placements.len() {
+        color_placements[index] += color_placements[index] / 4.0;
+    }
+    return color_placements;
+}
+
+fn solve_puzzle(tubes: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+    let color_placements = calc_highest_color(&tubes);
+    println!("{:?}", color_placements);
     return tubes;
 }
 
 fn main() {
     println!("Please Enter the current Puzzle in the following Form: ");
-    println!("First enter the number of tubes!");
+    println!("First enter the number of tubes not counting the empty tubes!");
+    println!("(Only working for 2 empty tubes)");
 
     let mut tube_count = String::new();
     io::stdin()
