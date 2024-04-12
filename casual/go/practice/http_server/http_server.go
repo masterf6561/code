@@ -125,6 +125,10 @@ func getHue(w http.ResponseWriter, req *http.Request) {
 	log.Println(state)
 }
 
+func handleLoad(w http.ResponseWriter, req *http.Request) {
+	fmt.Fprintf(w, "%s", req)
+}
+
 func main() {
 
 	router := http.NewServeMux()
@@ -132,6 +136,7 @@ func main() {
 	router.HandleFunc("GET /headers", headers)
 	router.HandleFunc("GET /hue", getHue)
 	router.HandleFunc("GET /hue/{turn}", setHue)
+	router.HandleFunc("GET /load", handleLoad)
 
 	server := http.Server{
 		Addr:    ":8090",
