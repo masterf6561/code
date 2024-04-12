@@ -126,7 +126,28 @@ func getHue(w http.ResponseWriter, req *http.Request) {
 }
 
 func handleLoad(w http.ResponseWriter, req *http.Request) {
-	fmt.Fprintf(w, "%s", req)
+
+	type RequestBody struct {
+		Number int
+	}
+
+	body, err := io.ReadAll(req.Body)
+	if err != nil {
+		fmt.Println("Error while reading request Body")
+	}
+	var formattedBody RequestBody
+	err = json.Unmarshal(body, &formattedBody)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Error parsing JSON response: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	fmt.Fprintf(w, "%d", formattedBody.Number)
+	fmt.Println(formattedBody.Number)
+}
+
+func handlePage(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "index.html")
 }
 
 func main() {
@@ -136,7 +157,8 @@ func main() {
 	router.HandleFunc("GET /headers", headers)
 	router.HandleFunc("GET /hue", getHue)
 	router.HandleFunc("GET /hue/{turn}", setHue)
-	router.HandleFunc("GET /load", handleLoad)
+	router.HandleFunc("POST /load", handleLoad)
+	router.HandleFunc("GET /page", handlePage)
 
 	server := http.Server{
 		Addr:    ":8090",
@@ -145,5 +167,8 @@ func main() {
 
 	log.Println("Starting Server at Port :8090")
 
-	server.ListenAndServe()
+	go func() {
+		server.ListenAndServe()
+	}()
+	select {}
 }
