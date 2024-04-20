@@ -6,7 +6,7 @@ namespace first_project{
   class Programm{
     static void Main(string[] args){
       string name = "Moritz";
-      Console.Title = "CS-Termina";
+      Console.Title = "CS-Terminal";
       Console.ForegroundColor = ConsoleColor.Green;
       Console.BackgroundColor = ConsoleColor.DarkYellow;
       // Console.WindowHeight = 40;
