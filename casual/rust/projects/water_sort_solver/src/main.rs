@@ -1,4 +1,9 @@
+use serde_json::{json, Value};
 use std::io;
+use std::{
+    io::{prelude::*, BufReader},
+    net::{TcpListener, TcpStream},
+};
 
 fn calc_color_placement(tubes: &Vec<Vec<i32>>) -> Vec<f32> {
     let mut color_placements: Vec<i32> = vec![0; tubes.len() - 2];
@@ -43,17 +48,17 @@ struct Move {
 }
 
 fn get_top_color(tube: &Vec<i32>) -> i32 {
-    for color in tube {
-        if *color != 0 {
+    for (color_index, color) in tube.iter().enumerate() {
+        if *color != 0 && color_index != 0 {
             return *color;
         }
     }
     return 0;
 }
 
-fn find_target_tube(color: &i32, tubes: &Vec<Vec<i32>>) -> i32 {
+fn find_target_tube(color: &i32, tubes: &Vec<Vec<i32>>, src_tube_index: &usize) -> i32 {
     for (tube_index, tube) in tubes.iter().enumerate() {
-        if get_top_color(&tube) == *color {
+        if get_top_color(&tube) == *color && tube_index != *src_tube_index {
             return tube_index as i32 + 1;
         }
     }
@@ -75,7 +80,7 @@ fn find_moves(tubes: &Vec<Vec<i32>>, hightest_color: &i32) -> Vec<Move> {
         let top_color = get_top_color(&tube);
         if top_color == *hightest_color {
             println!("matching");
-            let tgt_tube = find_target_tube(&top_color, &tubes);
+            let tgt_tube = find_target_tube(&top_color, &tubes, &tube_index);
             println!("{tgt_tube}");
             if tgt_tube != 0 {
                 moves.push(Move {
@@ -99,9 +104,7 @@ fn find_moves(tubes: &Vec<Vec<i32>>, hightest_color: &i32) -> Vec<Move> {
 fn solve_puzzle(tubes: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
     let mut solved = false;
     let color_placements = calc_color_placement(&tubes);
-    println!("{:?}", color_placements);
     let hightest_color = min(color_placements);
-    println!("{hightest_color}");
     while !solved {
         let moves = find_moves(&tubes, &hightest_color);
         println!("{:?}", moves);
@@ -116,6 +119,12 @@ fn solve_puzzle(tubes: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
 }
 
 fn main() {
+    let listener = TcpListener::bind("localhost:7878").unwrap();
+    for stream in listener.incoming() {
+        let stream = stream.unwrap();
+        handle_connection(stream);
+    }
+
     println!("Please Enter the current Puzzle in the following Form: ");
     println!("First enter the number of tubes not counting the empty tubes!");
     println!("(Only working for 2 empty tubes)");
@@ -152,4 +161,49 @@ fn main() {
         tubes[i] = current_tube;
     }
     solve_puzzle(tubes);
+}
+
+fn handle_connection(mut stream: TcpStream) {
+    let mut buf_reader = BufReader::new(&mut stream);
+    let mut http_request_lines = Vec::new();
+
+    loop {
+        let mut line = String::new();
+        buf_reader.read_line(&mut line).unwrap();
+        if line == "\r\n" || line == "" {
+            break;
+        }
+        http_request_lines.push(line);
+    }
+
+    // Parse the request method, path, and HTTP version from the request line
+    let request_line = http_request_lines[0].clone();
+    let request_line = request_line.trim_end_matches("\r\n").to_string();
+
+    let (status_line, content) = match &request_line[..] {
+        "GET / HTTP/1.1" => ("HTTP/1.1 200 OK", json!({ "message": "Hello from server" })),
+        "POST /post HTTP/1.1" => {
+            loop {
+                let mut line = String::new();
+                buf_reader.read_line(&mut line).unwrap();
+                if line == "\r\n" || line == "" {
+                    break;
+                }
+                println!("{line}");
+                http_request_lines.push(line);
+            }
+            ("HTTP/1.1 200 OK", json!({ "message": "You Posted" }))
+        }
+        _ => (
+            "HTTP/1.1 404 NOT FOUND",
+            json!({ "message": "Page not found" }),
+        ),
+    };
+    let response_body = serde_json::to_string(&content).unwrap();
+    let length = response_body.len();
+    let response = format!(
+        "{status_line}\r\nContent-Length: {length}\r\nAccess-Control-Allow-Origin: *\r\n\r\n{response_body}"
+    );
+    stream.write_all(response.as_bytes()).unwrap();
+    stream.flush().unwrap();
 }

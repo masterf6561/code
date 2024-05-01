@@ -1,0 +1,95 @@
+.styled-input {
+  width: 200px;
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  font-size: 16px;
+}
+
+.styled-input:focus {
+  border-color: #007bff;
+  /* Change border color on focus */
+}
+
+.colorText {
+  text-align: center;
+}
+
+.colorBoxes {
+  margin-top: 4rem;
+  justify-content: center;
+  display: flex;
+
+}
+
+.input-container {
+  margin-bottom: 4rem;
+}
+
+.page {
+  background-color: hsl(240, 22%, 70%);
+  height: 100vh;
+}
+
+.App {
+  text-align: center;
+}
+
+.container-row {
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  width: 50px;
+  height: 200px;
+  border: 2px solid black;
+  border-top: none;
+  border-bottom-right-radius: 7px;
+  border-bottom-left-radius: 7px;
+  margin: 10px;
+  position: relative;
+  cursor: pointer;
+}
+
+.water {
+  width: 50px;
+  height: 50px;
+}
+
+.button {
+  border: none;
+}
+
+.button:hover {
+  background-color: white;
+}
+
+.styled-button {
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  background-color: hsl(240, 22%, 60%);
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.styled-button:hover {
+  background-color: hsl(240, 22%, 50%);
+}
+
+.solutions-button {
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  background-color: hsl(55, 22%, 60%);
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 4rem;
+}
+
+.solutions-button:hover {
+  background-color: hsl(55, 22%, 50%);
+}
