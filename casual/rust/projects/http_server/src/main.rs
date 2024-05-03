@@ -29,6 +29,24 @@ fn handle_connection(mut stream: TcpStream) {
     stream.write_all(response.as_bytes()).unwrap();
 }
 
+fn codemoon_handle(mut stream: TcpStream) {
+    loop {
+        let mut read: [u8; _] = [0; 1028];
+        match stream.read(&mut read) {
+            Ok(n) => {
+                if n == 0 {
+                    //connection was closed
+                    break;
+                }
+                stream.write(&read[0..n]).unwrap();
+            }
+            Err(err) => {
+                panic!("{}", err);
+            }
+        }
+    }
+}
+
 fn main() {
     let listener = TcpListener::bind("192.168.178.28:7878").unwrap();
     let pool = ThreadPool::new(8);
