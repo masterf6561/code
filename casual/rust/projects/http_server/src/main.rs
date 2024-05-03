@@ -1,3 +1,4 @@
+use core::panic;
 use std::{
     io::{prelude::*, BufReader},
     net::{TcpListener, TcpStream},
@@ -31,7 +32,7 @@ fn handle_connection(mut stream: TcpStream) {
 
 fn codemoon_handle(mut stream: TcpStream) {
     loop {
-        let mut read: [u8; _] = [0; 1028];
+        let mut read = [0; 1028];
         match stream.read(&mut read) {
             Ok(n) => {
                 if n == 0 {
@@ -48,12 +49,24 @@ fn codemoon_handle(mut stream: TcpStream) {
 }
 
 fn main() {
-    let listener = TcpListener::bind("192.168.178.28:7878").unwrap();
-    let pool = ThreadPool::new(8);
+    let listener = TcpListener::bind("localhost:7878").unwrap();
+    // let pool = ThreadPool::new(8);
+    // for stream in listener.incoming() {
+    //     let stream = stream.unwrap();
+    //     pool.execute(|| {
+    //         handle_connection(stream);
+    //     });
+    // }
     for stream in listener.incoming() {
-        let stream = stream.unwrap();
-        pool.execute(|| {
-            handle_connection(stream);
-        });
+        match stream {
+            Ok(stream) => {
+                thread::spawn(move || {
+                    handle_connection(stream);
+                });
+            }
+            Err(err) => {
+                panic!("{}", err);
+            }
+        }
     }
 }

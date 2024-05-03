@@ -141,6 +141,7 @@ func handleLoad(w http.ResponseWriter, req *http.Request) {
 		http.Error(w, fmt.Sprintf("Error parsing JSON response: %v", err), http.StatusInternalServerError)
 		return
 	}
+	fmt.Println(formattedBody)
 
 	fmt.Fprintf(w, "%d", formattedBody.Number)
 	fmt.Println(formattedBody.Number)
