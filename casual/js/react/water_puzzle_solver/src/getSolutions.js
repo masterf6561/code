@@ -1,5 +1,13 @@
 export const getSolutions = async (tubes) => {
-  fetch('http://localhost:7878') // Replace 'http://localhost:3000/data' with your API endpoint
+  const url = "http://localhost:7878/post";
+  const options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(tubes)
+  };
+  fetch(url, options)
   .then(response => {
     if (!response.ok) {
       throw new Error('Network response was not ok');
@@ -8,7 +16,6 @@ export const getSolutions = async (tubes) => {
   })
   .then(data => {
     console.log('Data:', data);
-    // Do something with the fetched data
   })
   .catch(error => {
     console.error('There was a problem with the fetch operation:', error);

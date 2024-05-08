@@ -163,9 +163,20 @@ fn main() {
     solve_puzzle(tubes);
 }
 
+fn get_content_length(line: &str) -> Option<usize> {
+    if let Some(idx) = line.find(':') {
+        if let Ok(length) = line[idx + 1..].trim().parse::<usize>() {
+            return Some(length);
+        }
+    }
+    None
+}
+
 fn handle_connection(mut stream: TcpStream) {
     let mut buf_reader = BufReader::new(&mut stream);
     let mut http_request_lines = Vec::new();
+    let mut content_length: Option<usize> = None;
+    let mut content_read = 0;
 
     loop {
         let mut line = String::new();
@@ -173,27 +184,39 @@ fn handle_connection(mut stream: TcpStream) {
         if line == "\r\n" || line == "" {
             break;
         }
+        if line.to_lowercase().starts_with("content-length") {
+            if let Some(length) = get_content_length(&line) {
+                content_length = Some(length);
+            }
+        }
         http_request_lines.push(line);
     }
 
     // Parse the request method, path, and HTTP version from the request line
     let request_line = http_request_lines[0].clone();
+    println!("{request_line}");
     let request_line = request_line.trim_end_matches("\r\n").to_string();
 
     let (status_line, content) = match &request_line[..] {
         "GET / HTTP/1.1" => ("HTTP/1.1 200 OK", json!({ "message": "Hello from server" })),
         "POST /post HTTP/1.1" => {
-            loop {
-                let mut line = String::new();
-                buf_reader.read_line(&mut line).unwrap();
-                if line == "\r\n" || line == "" {
-                    break;
+            if let Some(length) = content_length {
+                let mut buffer = vec![0; length];
+                while content_read < length {
+                    let bytes_read = buf_reader.read(&mut buffer[content_read..]).unwrap();
+                    if bytes_read == 0 {
+                        break;
+                    }
+                    content_read += bytes_read;
                 }
-                println!("{line}");
-                http_request_lines.push(line);
+                let body_stringified = String::from_utf8_lossy(&buffer);
+                let body: Value =
+                    serde_json::from_str(&body_stringified).expect("Error while parsing Body");
+                println!("{:?}", bodbody);
             }
             ("HTTP/1.1 200 OK", json!({ "message": "You Posted" }))
         }
+        "OPTIONS /post HTTP/1.1" => ("HTTP/1.1 200 OK", json!({ "message": "You Posted" })),
         _ => (
             "HTTP/1.1 404 NOT FOUND",
             json!({ "message": "Page not found" }),
@@ -202,7 +225,7 @@ fn handle_connection(mut stream: TcpStream) {
     let response_body = serde_json::to_string(&content).unwrap();
     let length = response_body.len();
     let response = format!(
-        "{status_line}\r\nContent-Length: {length}\r\nAccess-Control-Allow-Origin: *\r\n\r\n{response_body}"
+        "{status_line}\r\nContent-Length: {length}\r\nAccess-Control-Allow-Origin: *\r\nAccess-Control-Allow-Methods: POST,GET,OPTION\r\nAccess-Control-Allow-Headers: Content-Type\r\n\r\n{response_body}"
     );
     stream.write_all(response.as_bytes()).unwrap();
     stream.flush().unwrap();

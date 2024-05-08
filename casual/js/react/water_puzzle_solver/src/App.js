@@ -75,6 +75,10 @@ function App() {
     }
   }
 
+  const handleSolutionsClick = () => {
+    getSolutions(containers);
+  }
+
   return (
     <div className='page'>
       <div className="App">
@@ -90,7 +94,7 @@ function App() {
             </div>
           ))}
         </div>
-        <button className='solutions-button' onClick={getSolutions}>Get Solutions!</button>
+        <button className='solutions-button' onClick={handleSolutionsClick}>Get Solutions!</button>
       </div>
       <Colors colors={colors} onClick={fillTubes} />
     </div>
