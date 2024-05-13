@@ -1,5 +1,9 @@
+mod helpers;
+mod manual_input;
+
+use helpers::convert_tubes_body;
+use manual_input::manual_input;
 use serde_json::{json, Value};
-use std::io;
 use std::{
     io::{prelude::*, BufReader},
     net::{TcpListener, TcpStream},
@@ -9,6 +13,7 @@ fn calc_color_placement(tubes: &Vec<Vec<i32>>) -> Vec<f32> {
     let mut color_placements: Vec<i32> = vec![0; tubes.len() - 2];
     for (_tube_index, tube) in tubes.iter().enumerate() {
         for (color_index, color) in tube.iter().enumerate() {
+            println!("{_tube_index}{color_index}");
             let current_color_sum = color_placements[(*color - 1) as usize];
             color_placements[(*color - 1) as usize] = current_color_sum + (color_index as i32) + 1;
         }
@@ -119,48 +124,13 @@ fn solve_puzzle(tubes: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
 }
 
 fn main() {
+    // let tubes = manual_input();
+    // solve_puzzle(tubes);
     let listener = TcpListener::bind("localhost:7878").unwrap();
     for stream in listener.incoming() {
         let stream = stream.unwrap();
         handle_connection(stream);
     }
-
-    println!("Please Enter the current Puzzle in the following Form: ");
-    println!("First enter the number of tubes not counting the empty tubes!");
-    println!("(Only working for 2 empty tubes)");
-
-    let mut tube_count = String::new();
-    io::stdin()
-        .read_line(&mut tube_count)
-        .expect("Error while reading tube Count");
-    let tube_count: usize = tube_count.trim().parse().unwrap();
-
-    println!("\nThen enter each tube like so: \n");
-    println!("1 3 6 2 \n");
-    println!(
-        "Where each number is a color. Press enter to confirm one tube and enter the next one. \n"
-    );
-    println!("The tubes are: \n");
-
-    let mut tubes: Vec<Vec<i32>> = vec![vec![]; tube_count + 2];
-    for i in 0..tube_count {
-        let mut current_tube = String::new();
-        io::stdin()
-            .read_line(&mut current_tube)
-            .expect("Error while reading this Tube");
-        let current_tube: Vec<i32> = current_tube
-            .split_whitespace()
-            .map(|s| s.parse().expect("Error while reading substring"))
-            .collect();
-        if current_tube.len() != 4 {
-            panic!(
-                "\n The tube only has 4 slots. You gave {}. \n",
-                current_tube.len()
-            );
-        }
-        tubes[i] = current_tube;
-    }
-    solve_puzzle(tubes);
 }
 
 fn get_content_length(line: &str) -> Option<usize> {
@@ -170,6 +140,22 @@ fn get_content_length(line: &str) -> Option<usize> {
         }
     }
     None
+}
+
+fn handle_get_solutions_post(body: Value) -> String {
+    let tubes = convert_tubes_body(&body["tubes"]);
+    let converted_tubes;
+    match tubes {
+        Some(result) => {
+            converted_tubes = result;
+            println!("{:?}", converted_tubes);
+            solve_puzzle(converted_tubes);
+            return String::from("Successfully read Tubes");
+        }
+        None => {
+            return String::from("Failed to read Tubes Object");
+        }
+    }
 }
 
 fn handle_connection(mut stream: TcpStream) {
@@ -200,6 +186,7 @@ fn handle_connection(mut stream: TcpStream) {
     let (status_line, content) = match &request_line[..] {
         "GET / HTTP/1.1" => ("HTTP/1.1 200 OK", json!({ "message": "Hello from server" })),
         "POST /post HTTP/1.1" => {
+            let mut message = String::from("Error");
             if let Some(length) = content_length {
                 let mut buffer = vec![0; length];
                 while content_read < length {
@@ -212,9 +199,9 @@ fn handle_connection(mut stream: TcpStream) {
                 let body_stringified = String::from_utf8_lossy(&buffer);
                 let body: Value =
                     serde_json::from_str(&body_stringified).expect("Error while parsing Body");
-                println!("{:?}", bodbody);
+                message = handle_get_solutions_post(body);
             }
-            ("HTTP/1.1 200 OK", json!({ "message": "You Posted" }))
+            ("HTTP/1.1 200 OK", json!({ "message": message }))
         }
         "OPTIONS /post HTTP/1.1" => ("HTTP/1.1 200 OK", json!({ "message": "You Posted" })),
         _ => (
