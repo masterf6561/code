@@ -3,6 +3,7 @@ mod manual_input;
 
 use helpers::convert_tubes_body;
 use manual_input::manual_input;
+use serde::Serialize;
 use serde_json::{json, Value};
 use std::{
     io::{prelude::*, BufReader},
@@ -11,11 +12,13 @@ use std::{
 
 fn calc_color_placement(tubes: &Vec<Vec<i32>>) -> Vec<f32> {
     let mut color_placements: Vec<i32> = vec![0; tubes.len() - 2];
-    for (_tube_index, tube) in tubes.iter().enumerate() {
-        for (color_index, color) in tube.iter().enumerate() {
-            println!("{_tube_index}{color_index}");
-            let current_color_sum = color_placements[(*color - 1) as usize];
-            color_placements[(*color - 1) as usize] = current_color_sum + (color_index as i32) + 1;
+    for (tube_index, tube) in tubes.iter().enumerate() {
+        if tube_index < tubes.len() - 2 {
+            for (color_index, color) in tube.iter().enumerate() {
+                let current_color_sum = color_placements[(*color - 1) as usize];
+                color_placements[(*color - 1) as usize] =
+                    current_color_sum + (color_index as i32) + 1;
+            }
         }
     }
     let mut color_placement_avg: Vec<f32> = vec![0.0; color_placements.len()];
@@ -46,7 +49,7 @@ fn check_solved(tubes: &Vec<Vec<i32>>) -> bool {
     return true;
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 struct Move {
     src_tube: i32,
     tgt_tube: i32,
@@ -106,12 +109,18 @@ fn find_moves(tubes: &Vec<Vec<i32>>, hightest_color: &i32) -> Vec<Move> {
     return moves;
 }
 
-fn solve_puzzle(tubes: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+fn solve_puzzle(tubes: Vec<Vec<i32>>) -> Vec<Move> {
     let mut solved = false;
     let color_placements = calc_color_placement(&tubes);
     let hightest_color = min(color_placements);
+    let mut moves: Vec<Move> = vec![{
+        Move {
+            tgt_tube: 1,
+            src_tube: 1,
+        }
+    }];
     while !solved {
-        let moves = find_moves(&tubes, &hightest_color);
+        moves = find_moves(&tubes, &hightest_color);
         println!("{:?}", moves);
         if moves.len() == 0 {
             println!("No more moves");
@@ -120,7 +129,8 @@ fn solve_puzzle(tubes: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
         println!("{solved}");
         solved = true;
     }
-    return tubes;
+    println!("{:?}", moves);
+    return moves;
 }
 
 fn main() {
@@ -149,8 +159,8 @@ fn handle_get_solutions_post(body: Value) -> String {
         Some(result) => {
             converted_tubes = result;
             println!("{:?}", converted_tubes);
-            solve_puzzle(converted_tubes);
-            return String::from("Successfully read Tubes");
+            let moves = json!(solve_puzzle(converted_tubes));
+            return moves.to_string();
         }
         None => {
             return String::from("Failed to read Tubes Object");
