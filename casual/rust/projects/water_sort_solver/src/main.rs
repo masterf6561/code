@@ -25,6 +25,7 @@ fn calc_color_placement(tubes: &Vec<Vec<i32>>) -> Vec<f32> {
     for (index, value) in color_placements.iter().enumerate() {
         color_placement_avg[index] = (*value) as f32 / 4.0;
     }
+    println!("[DEBUG]: Color Placements: {:?}", color_placement_avg);
     return color_placement_avg;
 }
 
@@ -67,7 +68,7 @@ fn get_top_color(tube: &Vec<i32>) -> i32 {
 fn find_target_tube(color: &i32, tubes: &Vec<Vec<i32>>, src_tube_index: &usize) -> i32 {
     for (tube_index, tube) in tubes.iter().enumerate() {
         if get_top_color(&tube) == *color && tube_index != *src_tube_index {
-            return tube_index as i32 + 1;
+            return tube_index as i32;
         }
     }
     return 0;
@@ -75,61 +76,74 @@ fn find_target_tube(color: &i32, tubes: &Vec<Vec<i32>>, src_tube_index: &usize) 
 
 fn find_empty_tube(tubes: &Vec<Vec<i32>>) -> i32 {
     for (tube_index, tube) in tubes.iter().enumerate() {
-        if tube.is_empty() {
-            return tube_index as i32 + 1;
+        let mut zero_count = 0;
+        for (_color_index, color) in tube.iter().enumerate() {
+            if *color == 0 {
+                zero_count += 1;
+            }
+        }
+        if zero_count == 4 {
+            return tube_index as i32;
         }
     }
     return 0;
 }
 
-fn find_moves(tubes: &Vec<Vec<i32>>, hightest_color: &i32) -> Vec<Move> {
-    let mut moves: Vec<Move> = Vec::new();
+fn find_move(tubes: &Vec<Vec<i32>>, hightest_color: &i32) -> Option<Move> {
+    let mut current_move: Move;
     for (tube_index, tube) in tubes.iter().enumerate() {
         let top_color = get_top_color(&tube);
         if top_color == *hightest_color {
             println!("matching");
             let tgt_tube = find_target_tube(&top_color, &tubes, &tube_index);
-            println!("{tgt_tube}");
+            println!("[DEBUG]: Target Tube: {tgt_tube}");
             if tgt_tube != 0 {
-                moves.push(Move {
+                current_move = Move {
                     src_tube: tube_index as i32,
                     tgt_tube,
-                });
+                };
             } else {
                 let empty_tube_index = find_empty_tube(&tubes);
                 if empty_tube_index != 0 {
-                    moves.push(Move {
+                    current_move = Move {
                         src_tube: tube_index as i32,
                         tgt_tube: empty_tube_index,
-                    })
+                    }
                 }
             }
         }
     }
-    return moves;
+    None
+}
+
+fn make_move(tubes: &Vec<Vec<i32>>, current_move: &Move) -> Vec<Vec<i32>> {
+    let source = current_move.src_tube;
+    let target = current_move.tgt_tube;
+    let new_tubes = tubes.clone();
+    return new_tubes;
 }
 
 fn solve_puzzle(tubes: Vec<Vec<i32>>) -> Vec<Move> {
     let mut solved = false;
     let color_placements = calc_color_placement(&tubes);
     let hightest_color = min(color_placements);
-    let mut moves: Vec<Move> = vec![{
-        Move {
-            tgt_tube: 1,
-            src_tube: 1,
-        }
-    }];
+    println!("[DEBUG]: Highest Color {}", hightest_color);
+    let mut moves: Vec<Move> = vec![];
+    let mut current_move: Move;
     while !solved {
-        moves = find_moves(&tubes, &hightest_color);
-        println!("{:?}", moves);
-        if moves.len() == 0 {
-            println!("No more moves");
+        match find_move(&tubes, &hightest_color) {
+            Some(mv) => {
+                current_move = mv;
+                make_move(&tubes, &current_move);
+                moves.push(current_move);
+                println!("[DEBUG]: Moves: {:?}", moves);
+            }
+            None => println!("No more moves"),
         }
         solved = check_solved(&tubes);
-        println!("{solved}");
-        solved = true;
+        println!("[DEBUG]: Solved: {solved}");
     }
-    println!("{:?}", moves);
+    println!("[DEBUG]: Final Moves: {:?}", moves);
     return moves;
 }
 
